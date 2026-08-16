@@ -206,6 +206,39 @@ struct CityProbe {
             }
         }
 
+        // Rescue pass — the failures above used a bare name, which is the worst case.
+        // A reel usually also tells you the city, and often the dish or the district.
+        // Does a richer query recover them? That decides what the extraction step
+        // needs to emit: a name, or a name plus context.
+        let failures = empty + suspect + noIdentifier
+        if !failures.isEmpty {
+            print(String(repeating: "═", count: 62))
+            print("RESCUE PASS — retrying failures with added context\n")
+            for city in cities {
+                for query in city.queries {
+                    let tag = "\(city.name): \(query)"
+                    guard failures.contains(where: { $0.hasPrefix(tag) || $0.contains("\"\(query)\"") })
+                    else { continue }
+
+                    print("── \"\(query)\" (\(city.name))")
+                    for enriched in ["\(query) \(city.name)",
+                                     "\(query) restaurant \(city.name)"] {
+                        let results = await search(enriched, in: city)
+                        guard let top = results.first else {
+                            print("   \"\(enriched)\" → nothing"); continue
+                        }
+                        let id = top.muid.map(String.init) ?? "NO IDENTIFIER"
+                        let ok = top.muid != nil && shareToken(top.name, query)
+                        print("   \(ok ? "✓" : "✗") \"\(enriched)\"")
+                        print("       → \(top.name) · \(top.category) · \(id)")
+                        print("         \(top.address.replacingOccurrences(of: "\n", with: ", "))")
+                        if ok { break }
+                    }
+                    print("")
+                }
+            }
+        }
+
         print(String(repeating: "═", count: 62))
         print("SUMMARY  ·  \(totalQueries) queries\n")
         func report(_ label: String, _ items: [String]) {
