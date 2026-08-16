@@ -41,9 +41,18 @@ func similarity(_ a: String, _ b: String) -> Double {
     return 1.0 - Double(prev[y.count]) / Double(max(x.count, y.count))
 }
 
+struct Line {
+    let text: String
+    let confidence: Float
+    let height: CGFloat       // normalised glyph height — a proxy for type size
+    let midY: CGFloat         // 0 = bottom of frame, 1 = top
+    let midX: CGFloat
+}
+
 struct Reading {
-    let lines: [(text: String, confidence: Float)]
+    let lines: [Line]
     let best: (text: String, score: Double)?
+    let bestIndex: Int?       // index into lines
 }
 
 func recognise(url: URL, expected: String, level: VNRequestTextRecognitionLevel,
@@ -55,16 +64,21 @@ func recognise(url: URL, expected: String, level: VNRequestTextRecognitionLevel,
 
     let handler = VNImageRequestHandler(url: url, options: [:])
     do { try handler.perform([request]) }
-    catch { return Reading(lines: [], best: nil) }
+    catch { return Reading(lines: [], best: nil, bestIndex: nil) }
 
-    let lines: [(String, Float)] = (request.results ?? []).compactMap {
-        guard let c = $0.topCandidates(1).first else { return nil }
-        return (c.string, c.confidence)
+    let lines: [Line] = (request.results ?? []).compactMap { obs in
+        guard let c = obs.topCandidates(1).first else { return nil }
+        let b = obs.boundingBox
+        return Line(text: c.string, confidence: c.confidence,
+                    height: b.height, midY: b.midY, midX: b.midX)
     }
-    let best = lines
-        .map { (text: $0.0, score: similarity($0.0, expected)) }
-        .max { $0.score < $1.score }
-    return Reading(lines: lines, best: best)
+    var bestIdx: Int?
+    var best: (text: String, score: Double)?
+    for (i, l) in lines.enumerated() {
+        let s = similarity(l.text, expected)
+        if best == nil || s > best!.score { best = (l.text, s); bestIdx = i }
+    }
+    return Reading(lines: lines, best: best, bestIndex: bestIdx)
 }
 
 /// Unscored pass over real screenshots. There is no ground truth to score
@@ -114,6 +128,8 @@ struct OCRProbe {
         var byTier: [String: [Double]] = [:]
         var tierDesc: [String: String] = [:]
         var noiseTotal = 0
+        var sizeRank: [Int] = []
+        var largestWins = 0
 
         for f in fixtures {
             let url = root.appendingPathComponent(f.file)
@@ -133,6 +149,23 @@ struct OCRProbe {
             print("\(mark) [\(f.tier)] expected: \"\(f.expected)\"")
             print("    accurate: \"\(accurate.best?.text ?? "—")\"  score \(String(format: "%.2f", a))")
             print("    fast:     \"\(fast.best?.text ?? "—")\"  score \(String(format: "%.2f", ff))")
+
+            // Can geometry alone pick the place name out of the chrome?
+            // If the true line is reliably the tallest text, the disambiguation
+            // problem is solved with a sort rather than a language model.
+            if let bi = accurate.bestIndex, !accurate.lines.isEmpty {
+                let line = accurate.lines[bi]
+                let taller = accurate.lines.filter { $0.height > line.height }.count
+                sizeRank.append(taller + 1)
+                if taller == 0 { largestWins += 1 }
+                print(String(format: "    geometry: height %.3f, rank %d of %d by size, midY %.2f",
+                             line.height, taller + 1, accurate.lines.count, line.midY))
+                if taller > 0 {
+                    let bigger = accurate.lines.filter { $0.height > line.height }
+                        .map { "\"\($0.text)\"" }.joined(separator: ", ")
+                    print("    larger text on screen: \(bigger)")
+                }
+            }
             print("    \(accurate.lines.count) lines recognised in total")
             if a < 0.95 {
                 let others = accurate.lines.prefix(6).map { "\"\($0.text)\"" }.joined(separator: ", ")
@@ -162,5 +195,17 @@ struct OCRProbe {
         print("Recovered exactly: \(exact) of \(all.count)")
         print("Average lines of text per frame: \(noiseTotal / max(1, fixtures.count)) — "
             + "the place name is one of them, and OCR does not say which.")
+
+        print("\n" + String(repeating: "═", count: 62))
+        print("CAN GEOMETRY PICK IT OUT?\n")
+        print("Place name was the LARGEST text on screen: \(largestWins) of \(sizeRank.count)")
+        if !sizeRank.isEmpty {
+            let mean = Double(sizeRank.reduce(0, +)) / Double(sizeRank.count)
+            print(String(format: "Mean rank by type size: %.2f  (1.00 would mean always largest)", mean))
+            let topTwo = sizeRank.filter { $0 <= 2 }.count
+            print("Within the two largest: \(topTwo) of \(sizeRank.count)")
+        }
+        print("\nIf the place name is reliably the biggest text, disambiguation is a sort,")
+        print("not a language model — and the on-device path gets a great deal cheaper.")
     }
 }
