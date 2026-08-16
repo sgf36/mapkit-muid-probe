@@ -99,8 +99,10 @@ func runRealScreenshots() -> Bool {
         let url = dir.appendingPathComponent(name)
         let r = recognise(url: url, expected: "", level: .accurate, correction: true)
         print("── \(name)  ·  \(r.lines.count) lines")
-        for (text, conf) in r.lines {
-            print(String(format: "   %.2f  %@", conf, text))
+        // Sorted by type size — largest first, which on a reel frame is usually
+        // the place name and rarely the chrome.
+        for l in r.lines.sorted(by: { $0.height > $1.height }) {
+            print(String(format: "   size %.3f  conf %.2f  %@", l.height, l.confidence, l.text))
         }
         print("")
     }
