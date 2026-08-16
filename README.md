@@ -1,5 +1,32 @@
 # MapKit muid probe
 
+## Result — 16 August 2026
+
+**MapKit exposes the muid.** `MKMapItem.identifier.rawValue` is `I` followed by the
+muid in uppercase hex. Five of five matched, each within 7 m of the expected
+coordinate.
+
+```
+Dishoom Shoreditch    I43FA2531C5B5D635   →  4898268440419489333
+Wright Brothers       I655EEDD5976A0811   →  7304537147265648657
+Elliot's              I94FE63725FB590E2   →  10736127904580997346
+Arabica               I52BEC654CD7F9E76   →  5962421024212360822
+Black & Blue          I137AF3B095BD9DE0   →  1403702173631356384
+
+muid = UInt64(rawValue.dropFirst(), radix: 16)
+```
+
+The delivery chain is therefore clean end to end: `MKLocalSearch` → identifier →
+muid → guide link → populated guide in Apple Maps, with no scraping and no private
+endpoints anywhere in it.
+
+Caveat: all five are London businesses with strong Apple coverage. Chains,
+non-English names and thin-coverage regions are where `MKLocalSearch` will return a
+confident wrong match — and a wrong muid ships silently under Apple's own label.
+
+---
+
+
 Answers the last open question in the Reels-to-Guides feasibility work: **does MapKit
 hand a third-party app the same place identifier Apple Maps uses internally?**
 
