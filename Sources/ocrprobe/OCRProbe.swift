@@ -67,15 +67,45 @@ func recognise(url: URL, expected: String, level: VNRequestTextRecognitionLevel,
     return Reading(lines: lines, best: best)
 }
 
+/// Unscored pass over real screenshots. There is no ground truth to score
+/// against — the judgement is human — so this just prints everything Vision
+/// found, ordered as it found it, for comparison against a multimodal read of
+/// the same file.
+func runRealScreenshots() -> Bool {
+    let dir = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
+        .appendingPathComponent("real")
+    let images = ((try? FileManager.default.contentsOfDirectory(atPath: dir.path)) ?? [])
+        .filter { ["jpg", "jpeg", "png", "heic"].contains(($0 as NSString).pathExtension.lowercased()) }
+        .sorted()
+    guard !images.isEmpty else { return false }
+
+    print(String(repeating: "═", count: 62))
+    print("REAL SCREENSHOTS  ·  \(images.count) file(s) in real/\n")
+    for name in images {
+        let url = dir.appendingPathComponent(name)
+        let r = recognise(url: url, expected: "", level: .accurate, correction: true)
+        print("── \(name)  ·  \(r.lines.count) lines")
+        for (text, conf) in r.lines {
+            print(String(format: "   %.2f  %@", conf, text))
+        }
+        print("")
+    }
+    print("No score here — drop the same files past a multimodal model and compare")
+    print("which one produces a usable place name without the surrounding furniture.\n")
+    return true
+}
+
 @main
 struct OCRProbe {
     static func main() {
+        let hadReal = runRealScreenshots()
+
         let root = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
             .appendingPathComponent("fixtures")
         guard let data = try? Data(contentsOf: root.appendingPathComponent("manifest.json")),
               let fixtures = try? JSONDecoder().decode([Fixture].self, from: data) else {
             print("no fixtures/manifest.json — run tools/make_fixtures.py first")
-            exit(1)
+            exit(hadReal ? 0 : 1)
         }
 
         print("Vision OCR probe — \(fixtures.count) graded reel frames")
