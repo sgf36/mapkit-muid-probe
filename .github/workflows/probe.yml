@@ -14,5 +14,8 @@ jobs:
       - name: Show toolchain
         run: swift --version
 
-      - name: Run probe
+      - name: Run muid probe (identifier format)
         run: swift run -c release muidprobe
+
+      - name: Run city probe (resolution quality)
+        run: swift run -c release cityprobe

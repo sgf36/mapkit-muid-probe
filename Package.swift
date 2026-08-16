@@ -10,6 +10,11 @@ let package = Package(
             path: "Sources/muidprobe",
             // MapKit's result types aren't Sendable; Swift 6 mode would reject them.
             swiftSettings: [.swiftLanguageMode(.v5)]
+        ),
+        .executableTarget(
+            name: "cityprobe",
+            path: "Sources/cityprobe",
+            swiftSettings: [.swiftLanguageMode(.v5)]
         )
     ]
 )
