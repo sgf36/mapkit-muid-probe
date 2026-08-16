@@ -19,3 +19,6 @@ jobs:
 
       - name: Run city probe (resolution quality)
         run: swift run -c release cityprobe
+
+      - name: Run OCR probe (Vision on graded reel frames)
+        run: swift run -c release ocrprobe

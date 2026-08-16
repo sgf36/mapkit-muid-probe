@@ -15,6 +15,11 @@ let package = Package(
             name: "cityprobe",
             path: "Sources/cityprobe",
             swiftSettings: [.swiftLanguageMode(.v5)]
+        ),
+        .executableTarget(
+            name: "ocrprobe",
+            path: "Sources/ocrprobe",
+            swiftSettings: [.swiftLanguageMode(.v5)]
         )
     ]
 )

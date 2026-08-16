@@ -1,0 +1,152 @@
+[
+  {
+    "file": "t1-clean__da-enzo-al-29.jpg",
+    "tier": "t1-clean",
+    "tier_desc": "solid caption bar, heavy face",
+    "expected": "DA ENZO AL 29"
+  },
+  {
+    "file": "t1-clean__sant-eustachio.jpg",
+    "tier": "t1-clean",
+    "tier_desc": "solid caption bar, heavy face",
+    "expected": "Sant'Eustachio Il Caffè"
+  },
+  {
+    "file": "t1-clean__otaleg.jpg",
+    "tier": "t1-clean",
+    "tier_desc": "solid caption bar, heavy face",
+    "expected": "Otaleg Trastevere"
+  },
+  {
+    "file": "t1-clean__bonci-pizzarium.jpg",
+    "tier": "t1-clean",
+    "tier_desc": "solid caption bar, heavy face",
+    "expected": "Bonci Pizzarium"
+  },
+  {
+    "file": "t1-clean__roscioli.jpg",
+    "tier": "t1-clean",
+    "tier_desc": "solid caption bar, heavy face",
+    "expected": "Roscioli Salumeria"
+  },
+  {
+    "file": "t2-outlined__da-enzo-al-29.jpg",
+    "tier": "t2-outlined",
+    "tier_desc": "white with black stroke over video",
+    "expected": "DA ENZO AL 29"
+  },
+  {
+    "file": "t2-outlined__sant-eustachio.jpg",
+    "tier": "t2-outlined",
+    "tier_desc": "white with black stroke over video",
+    "expected": "Sant'Eustachio Il Caffè"
+  },
+  {
+    "file": "t2-outlined__otaleg.jpg",
+    "tier": "t2-outlined",
+    "tier_desc": "white with black stroke over video",
+    "expected": "Otaleg Trastevere"
+  },
+  {
+    "file": "t2-outlined__bonci-pizzarium.jpg",
+    "tier": "t2-outlined",
+    "tier_desc": "white with black stroke over video",
+    "expected": "Bonci Pizzarium"
+  },
+  {
+    "file": "t2-outlined__roscioli.jpg",
+    "tier": "t2-outlined",
+    "tier_desc": "white with black stroke over video",
+    "expected": "Roscioli Salumeria"
+  },
+  {
+    "file": "t3-shadow-busy__da-enzo-al-29.jpg",
+    "tier": "t3-shadow-busy",
+    "tier_desc": "drop shadow only, high-frequency background",
+    "expected": "DA ENZO AL 29"
+  },
+  {
+    "file": "t3-shadow-busy__sant-eustachio.jpg",
+    "tier": "t3-shadow-busy",
+    "tier_desc": "drop shadow only, high-frequency background",
+    "expected": "Sant'Eustachio Il Caffè"
+  },
+  {
+    "file": "t3-shadow-busy__otaleg.jpg",
+    "tier": "t3-shadow-busy",
+    "tier_desc": "drop shadow only, high-frequency background",
+    "expected": "Otaleg Trastevere"
+  },
+  {
+    "file": "t3-shadow-busy__bonci-pizzarium.jpg",
+    "tier": "t3-shadow-busy",
+    "tier_desc": "drop shadow only, high-frequency background",
+    "expected": "Bonci Pizzarium"
+  },
+  {
+    "file": "t3-shadow-busy__roscioli.jpg",
+    "tier": "t3-shadow-busy",
+    "tier_desc": "drop shadow only, high-frequency background",
+    "expected": "Roscioli Salumeria"
+  },
+  {
+    "file": "t4-low-contrast__da-enzo-al-29.jpg",
+    "tier": "t4-low-contrast",
+    "tier_desc": "tonal text, no stroke or shadow",
+    "expected": "DA ENZO AL 29"
+  },
+  {
+    "file": "t4-low-contrast__sant-eustachio.jpg",
+    "tier": "t4-low-contrast",
+    "tier_desc": "tonal text, no stroke or shadow",
+    "expected": "Sant'Eustachio Il Caffè"
+  },
+  {
+    "file": "t4-low-contrast__otaleg.jpg",
+    "tier": "t4-low-contrast",
+    "tier_desc": "tonal text, no stroke or shadow",
+    "expected": "Otaleg Trastevere"
+  },
+  {
+    "file": "t4-low-contrast__bonci-pizzarium.jpg",
+    "tier": "t4-low-contrast",
+    "tier_desc": "tonal text, no stroke or shadow",
+    "expected": "Bonci Pizzarium"
+  },
+  {
+    "file": "t4-low-contrast__roscioli.jpg",
+    "tier": "t4-low-contrast",
+    "tier_desc": "tonal text, no stroke or shadow",
+    "expected": "Roscioli Salumeria"
+  },
+  {
+    "file": "t5-motion__da-enzo-al-29.jpg",
+    "tier": "t5-motion",
+    "tier_desc": "rotated and motion-blurred mid-transition",
+    "expected": "DA ENZO AL 29"
+  },
+  {
+    "file": "t5-motion__sant-eustachio.jpg",
+    "tier": "t5-motion",
+    "tier_desc": "rotated and motion-blurred mid-transition",
+    "expected": "Sant'Eustachio Il Caffè"
+  },
+  {
+    "file": "t5-motion__otaleg.jpg",
+    "tier": "t5-motion",
+    "tier_desc": "rotated and motion-blurred mid-transition",
+    "expected": "Otaleg Trastevere"
+  },
+  {
+    "file": "t5-motion__bonci-pizzarium.jpg",
+    "tier": "t5-motion",
+    "tier_desc": "rotated and motion-blurred mid-transition",
+    "expected": "Bonci Pizzarium"
+  },
+  {
+    "file": "t5-motion__roscioli.jpg",
+    "tier": "t5-motion",
+    "tier_desc": "rotated and motion-blurred mid-transition",
+    "expected": "Roscioli Salumeria"
+  }
+]
